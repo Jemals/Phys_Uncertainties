@@ -28,11 +28,11 @@ def combo_list(cented_read, cented_rand, cented_calib):
 
     return combo_list
 
-def powerFix(combo_list, term_power):		# If functions are first-order and variables are passed by reference, 
+def powerFix(combo_list, term_power):		# If functions are first-order and variables are passed by reference,
     for i in range(0, len(combo_list)-1):   # no new value need be assigned so the function can be called
         combo_list[i] *= term_power         # merely to update the combined list.
-       
-       ''' combo_list is updated and so just using powerFix(combined_unc, 3) changes the original list to suit the 
+
+       ''' combo_list is updated and so just using powerFix(combined_unc, 3) changes the original list to suit the
            power uncertainty '''
 
 # Specific %uncertainty functions
@@ -42,27 +42,46 @@ def get_reading_unc(value_list, scale_unc):
         read_unc_list.append(scale_unc / value_list[i])
     return read_unc_list
 
-#def getLeastSF(dec_value): # Potentially unsafe as I don't check if it's actually a decimal value 
+#def getLeastSF(dec_value): # Potentially unsafe as I don't check if it's actually a decimal value
 '''GET TO THIS!!!'''
-    
 
-#def get_calibration_unc(value_list, )
-'''GET TO THIS!!!'''
+
+def get_calibration_unc(value_list):
+    calib_list = []
+    for i in range(0, len(value_list)-1):
+        if value_list[i] == 0:
+            print("Empty entry!")
+        elif value_list[i] in range(0.001, 0.01):
+            calib_list.append(0.005*value_list[i])
+        elif value_list[i] in range(0.0001, 0.001):
+            calib_list.append(0.005*value_list[i] + 0.0001)
+        elif value_list[i] in range(0.00001, 0.0001):
+            calib_list.append(0.005*value_list[i] + 0.00001)
+        elif value_list[i] in range(0.000001, 0.00001):
+            calib_list.append(0.005*value_list[i] + 0.000001)
+        else:
+            print("Error! Entry {0} within unknown range!".format(i))
+            calib_list.append("Exceptional value")
+    return calib_list
 
 def get_random_unc(repeated_results):
-    number = len(repeated_results) - 1
+    #number_values = len(repeated_results[0])
     sorted_list = qSort(repeated_results)
-    
-    return ( (sorted_list[-1] - sorted_list[0]) / 3)
+
+    random_uns = []
+    for i in range(0, len(repeated_results)-1):
+        random_uncs.append((sorted_list[i][-1] - sorted_list[i][0]) / len(repeated_values[i]))
+
+    return ( (sorted_list[-1] - sorted_list[0]) / len(repeated_values[0]) )
 
 # General
-def qSort(list):
-    if list == []:
+def qSort(repeated_list):
+    if repeated_list == []:
         return []
     else:
-        pivot = list[0]
-        lesser = qSort([x for x in list[1:] if x < pivot])
-        greater = qSort([x for x in list[1:] if x >= pivot])
-        return lesser + [pivot] greater
-
-
+        for i in range(0, len(repeated_list[0])-1):
+            pivot = repeated_list[i][0]
+            lesser = qSort([x for x in repeated_list[1:] if x < pivot])
+            greater = qSort([x for x in repeated_list[1:] if x >= pivot])
+            sorted_list.append(lesser + [pivot] + greater)
+        return sorted_list
