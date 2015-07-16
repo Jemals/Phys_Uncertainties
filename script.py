@@ -14,7 +14,6 @@ cented_reading_T = percented_list(raw_average_T,
                                   get_reading_unc(raw_average_T, 0.01))
 cented_calibration_T = percented_list(raw_average_T,
                                      get_calibration_unc(raw_average_T))
-print(get_calibration_unc(raw_average_T))
 
 cented_random_T = percented_list(raw_average_T,
                                  get_random_unc(raw_repeated_T))
@@ -23,7 +22,15 @@ overall_unc_T = combo_list( cented_reading_T,
                           cented_random_T
                         )
 
-print("""T values:
+print("Raw Data Averages: " + str(raw_average_T))
+
+print("\nCalibration: " + str(get_calibration_unc(raw_average_T)))
+
+print("\nReading: " + str(get_reading_unc(raw_average_T, 0.01)))
+
+print("\nRandom: " + str(get_random_unc(raw_repeated_T)))
+
+print("""\nAverage T values:
          {0}
          Percent Reading:
          {1}
@@ -32,7 +39,8 @@ print("""T values:
          Percent Random:
          {3}
          Percent Overall:
-         {4}""".format(cented_reading_T,
+         {4}""".format(raw_average_T,
+                       cented_reading_T,
                        cented_calibration_T,
                        cented_random_T,
                        overall_unc_T
