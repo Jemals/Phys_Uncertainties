@@ -1,5 +1,4 @@
 #! /usr/bin/env python
-
 import math
 
 # Simplicity is the best course of action, also: I'm too tired to mess around with classes right now
@@ -26,7 +25,7 @@ def combo_list(cented_read, cented_rand, cented_calib):
         shortest = len(cented_calib)
 
     for i in range(0, 5):
-        combo_list.append(round(math.sqrt(cented_read[i]**2 + cented_rand[i]**2 + cented_calib[i]**2)), 4)
+        combo_list.append(round(math.sqrt(cented_read[i]**2 + cented_rand[i]**2 + cented_calib[i]**2), 4))
 
     return combo_list
 
@@ -54,32 +53,32 @@ def get_calibration_unc(value_list):
         if value_list[i] == 0:
             print("Empty entry @ {0}, resorting to 0 val".format(value_list[i]))
             calib_list.append(0.0)
-
-        calib_list.append(round(round(value_list[i]*0.005, 4) + float("0."+ ( len(str(round(value_list[i]*0.005, 4)))-3) *"0" +"1"),4)
-
-
-        '''
-        elif len(str(0.005*value_list[i])) == 3:
-            calib_list.append(0.005*value_list[i] + 0.1)
-        elif len(str(0.005*value_list[i])) == 4:
-            calib_list.append(0.005*value_list[i] + 0.01)
-        elif len(str(0.005*value_list[i])) == 5:
-            calib_list.append(0.005*value_list[i] + 0.001)
-        elif len(str(0.005*value_list[i])) == 6:
-            calib_list.append(0.005*value_list[i] + 0.0001)
-        elif len(str(0.005*value_list[i])) == 7:
-            calib_list.append(0.005*value_list[i] + 0.00001)
-        elif len(str(0.005*value_list[i])) == 8:
-            calib_list.append(0.005*value_list[i] + 0.000001)
-        elif len(str(0.005*value_list[i])) == 9:
-            calib_list.append(0.005*value_list[i] + 0.0000001)
-        elif len(str(0.005*value_list[i])) == 10:
-            calib_list.append(0.005*value_list[i] + 0.00000001)
         else:
-            print("Error! Entry {0}:{1} within unknown range!".format(i, value_list[i]))
-            calib_list.append(0.0)
-        '''
+            calib_list.append(round(round(value_list[i]*0.005, 4) + float("0."+ ( len(str(round(value_list[i]*0.005, 4)))-3) *"0" +"1"),4))
+
     return calib_list
+
+
+'''elif len(str(0.005*value_list[i])) == 3:
+calib_list.append(0.005*value_list[i] + 0.1)
+elif len(str(0.005*value_list[i])) == 4:
+calib_list.append(0.005*value_list[i] + 0.01)
+elif len(str(0.005*value_list[i])) == 5:
+calib_list.append(0.005*value_list[i] + 0.001)
+elif len(str(0.005*value_list[i])) == 6:
+calib_list.append(0.005*value_list[i] + 0.0001)
+elif len(str(0.005*value_list[i])) == 7:
+calib_list.append(0.005*value_list[i] + 0.00001)
+elif len(str(0.005*value_list[i])) == 8:
+calib_list.append(0.005*value_list[i] + 0.000001)
+elif len(str(0.005*value_list[i])) == 9:
+calib_list.append(0.005*value_list[i] + 0.0000001)
+elif len(str(0.005*value_list[i])) == 10:
+calib_list.append(0.005*value_list[i] + 0.00000001)
+else:
+print("Error! Entry {0}:{1} within unknown range!".format(i, value_list[i]))
+calib_list.append(0.0)
+'''
 
 def get_random_unc(repeated_results):
     #number_values = len(repeated_results[0])
