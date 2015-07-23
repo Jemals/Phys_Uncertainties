@@ -1,16 +1,19 @@
 #! /usr/bin/env python
 
+# Jemals 2015
+# Version 1.0
+#
+# THERE IS NO WARRANTY FOR THIS SOFTWARE
+# THERE IS NO LICENSE
+
 import math
 
-# Simplicity is the best course of action, also: I'm too tired to mess around with classes right now
-
-#NB: fixed for-ranges to reflect new knowledge of "up to and not including" principle
 
 # General %uncertainty functions
 def percented_list(value_list, uncertainty_list):
     out_list = []
     for i in range(0, len(value_list) ):
-        out_list.append(round( (float(uncertainty_list[i]) / float(value_list[i])*100.0), 4))
+        out_list.append(round( (float(uncertainty_list[i]) / float(value_list[i])*100.0), 2))
     return out_list
 
 
@@ -25,14 +28,10 @@ def combo_list(cented_read, cented_rand, cented_calib):
     else:
         shortest = len(cented_calib)
 
-    for i in range(0, 5):
+    for i in range(0, shortest):
         combo_list.append(round(math.sqrt(cented_read[i]**2 + cented_rand[i]**2 + cented_calib[i]**2), 2))
 
     return combo_list
-
-
-#def overall_comb()
-
 
 def powerFix(combo_list, term_power):
     combo_sqr = []
@@ -42,11 +41,11 @@ def powerFix(combo_list, term_power):
 
 
 
-# Specific %uncertainty functions
-def get_reading_unc(value_list, scale_unc):
+# %uncertainty functions
+def get_centReading_unc(value_list, scale_unc):
     read_unc_list = []
     for i in range(0, len(value_list)):
-        read_unc_list.append(round((scale_unc / value_list[i]), 4))
+        read_unc_list.append(round((scale_unc / value_list[i])*100, 2))
     return read_unc_list
 
 
@@ -65,8 +64,6 @@ def get_calibration_unc(value_list):
 
 
 def get_random_unc(repeated_results):
-    #number_values = len(repeated_results[0])
-    ##sorted_list = qSort(repeated_results)
     sorted_list = []
     for i in range(0, len(repeated_results)):
         sorted_list.append(sorted(repeated_results[i]))
