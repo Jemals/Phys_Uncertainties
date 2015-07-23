@@ -1,87 +1,75 @@
 #! /usr/bin/env python
 
+# Jemals 2015
+# Version 1.0
+#
+# THERE IS NO WARRANTY FOR THIS SOFTWARE
+# THERE IS NO LICENSE
+
 import math
 
-# Simplicity is the best course of action, also: I'm too tired to mess around with classes right now
 
 # General %uncertainty functions
 def percented_list(value_list, uncertainty_list):
     out_list = []
-    for i in range(0, len(value_list) - 1):
-        out_list.append((uncertainty_list[i] / value_list[i])*100)
+    for i in range(0, len(value_list) ):
+        out_list.append(round( (float(uncertainty_list[i]) / float(value_list[i])*100.0), 2))
     return out_list
 
 
 def combo_list(cented_read, cented_rand, cented_calib):
     combo_list = []
 
-    # try to find the shortest list so to avoid errors.
+    # try to find the shortest list so to avoid errors. Shouldn't matter here
     if len(cented_read) < len(cented_rand) < len(cented_calib):
-        yarr = len(cented_read)
+        shortest = len(cented_read)
     elif len(cented_rand) < len(cented_read) < len(cented_calib):
-        yarr = len(cented_rand)
+        shortest = len(cented_rand)
     else:
-        yarr = len(cented_calib)
+        shortest = len(cented_calib)
 
-    for i in range(0, yarr-1):
-        combo_list.append(sqrt(cented_unc1[i]**2 + cented_unc2[i]**2 + cented_unc3[i]**2))
+    for i in range(0, shortest):
+        combo_list.append(round(math.sqrt(cented_read[i]**2 + cented_rand[i]**2 + cented_calib[i]**2), 2))
 
     return combo_list
 
-def powerFix(combo_list, term_power):		# If functions are first-order and variables are passed by reference,
-    for i in range(0, len(combo_list)-1):   # no new value need be assigned so the function can be called
-        combo_list[i] *= term_power         # merely to update the combined list.
+def powerFix(combo_list, term_power):
+    combo_sqr = []
+    for i in range(0, len(combo_list)):
+        combo_sqr.append(combo_list[i] * term_power)
+    return combo_sqr
 
-       ''' combo_list is updated and so just using powerFix(combined_unc, 3) changes the original list to suit the
-           power uncertainty '''
 
-# Specific %uncertainty functions
-def get_reading_unc(value_list, scale_unc):
+
+# %uncertainty functions
+def get_centReading_unc(value_list, scale_unc):
     read_unc_list = []
-    for i in range(0, len(value_list) - 1):
-        read_unc_list.append(scale_unc / value_list[i])
+    for i in range(0, len(value_list)):
+        read_unc_list.append(round((scale_unc / value_list[i])*100, 2))
     return read_unc_list
 
-#def getLeastSF(dec_value): # Potentially unsafe as I don't check if it's actually a decimal value
-'''GET TO THIS!!!'''
 
 
 def get_calibration_unc(value_list):
     calib_list = []
-    for i in range(0, len(value_list)-1):
+    for i in range(0, len(value_list)):
         if value_list[i] == 0:
-            print("Empty entry!")
-        elif value_list[i] in range(0.001, 0.01):
-            calib_list.append(0.005*value_list[i])
-        elif value_list[i] in range(0.0001, 0.001):
-            calib_list.append(0.005*value_list[i] + 0.0001)
-        elif value_list[i] in range(0.00001, 0.0001):
-            calib_list.append(0.005*value_list[i] + 0.00001)
-        elif value_list[i] in range(0.000001, 0.00001):
-            calib_list.append(0.005*value_list[i] + 0.000001)
+            print("Empty entry @ {0}, resorting to 0 val".format(value_list[i]))
+            calib_list.append(0.0)
         else:
-            print("Error! Entry {0} within unknown range!".format(i))
-            calib_list.append("Exceptional value")
+            calib_list.append(round(round(value_list[i]*0.005, 4) + float("0."+ ( len(str(round(value_list[i]*0.005, 4)))-3) *"0" +"1"),4))
+
     return calib_list
 
+
+
 def get_random_unc(repeated_results):
-    #number_values = len(repeated_results[0])
-    sorted_list = qSort(repeated_results)
+    sorted_list = []
+    for i in range(0, len(repeated_results)):
+        sorted_list.append(sorted(repeated_results[i]))
 
     random_uns = []
-    for i in range(0, len(repeated_results)-1):
-        random_uncs.append((sorted_list[i][-1] - sorted_list[i][0]) / len(repeated_values[i]))
+    for i in range(0, len(sorted_list)):
+        random_uns.append(round((sorted_list[i][-1] - sorted_list[i][0]) / len(sorted_list[i]), 4))
 
-    return ( (sorted_list[-1] - sorted_list[0]) / len(repeated_values[0]) )
-
-# General
-def qSort(repeated_list):
-    if repeated_list == []:
-        return []
-    else:
-        for i in range(0, len(repeated_list[0])-1):
-            pivot = repeated_list[i][0]
-            lesser = qSort([x for x in repeated_list[1:] if x < pivot])
-            greater = qSort([x for x in repeated_list[1:] if x >= pivot])
-            sorted_list.append(lesser + [pivot] + greater)
-        return sorted_list
+    return random_uns
